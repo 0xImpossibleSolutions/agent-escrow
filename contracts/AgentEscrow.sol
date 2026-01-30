@@ -138,8 +138,9 @@ contract AgentEscrow {
     }
 
     /**
-     * @notice Raise a dispute (v1: placeholder, v2: arbiter logic)
+     * @notice Raise a dispute
      * @param jobId The job ID
+     * @dev Sets 7-day timeout for dispute resolution. After timeout, employer can reclaim funds.
      */
     function dispute(uint256 jobId) external {
         Job storage job = jobs[jobId];
@@ -153,9 +154,28 @@ contract AgentEscrow {
         );
 
         job.status = JobStatus.Disputed;
+        job.deadline = block.timestamp + 7 days; // Set dispute resolution deadline
         emit JobDisputed(jobId, msg.sender);
+    }
 
-        // TODO: Implement arbiter resolution in v2
+    /**
+     * @notice Resolve dispute after timeout (7 days)
+     * @param jobId The job ID
+     * @dev After dispute timeout, employer can reclaim funds
+     */
+    function resolveDisputedJob(uint256 jobId) external {
+        Job storage job = jobs[jobId];
+        require(job.status == JobStatus.Disputed, "Job not disputed");
+        require(msg.sender == job.employer, "Only employer can resolve");
+        require(block.timestamp > job.deadline, "Dispute period not ended");
+
+        job.status = JobStatus.Cancelled;
+
+        // Refund employer (no fee charged for disputed jobs)
+        (bool success, ) = job.employer.call{value: job.amount}("");
+        require(success, "Refund failed");
+
+        emit JobCancelled(jobId, job.employer, job.amount);
     }
 
     /**

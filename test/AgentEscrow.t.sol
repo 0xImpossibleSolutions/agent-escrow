@@ -56,6 +56,8 @@ contract AgentEscrowTest is Test {
     }
 
     function testCannotCreateJobWithPastDeadline() public {
+        // Set current time to avoid underflow
+        vm.warp(2 days);
         uint256 deadline = block.timestamp - 1 days;
         
         vm.prank(employer);
@@ -261,6 +263,65 @@ contract AgentEscrowTest is Test {
         vm.prank(thirdParty);
         vm.expectRevert("Only parties can dispute");
         escrow.dispute(jobId);
+    }
+
+    function testResolveDisputedJob() public {
+        uint256 deadline = block.timestamp + 1 days;
+        
+        vm.prank(employer);
+        uint256 jobId = escrow.createJob{value: PAYMENT}(worker, deadline);
+        
+        // Dispute the job
+        vm.prank(employer);
+        escrow.dispute(jobId);
+        
+        // Fast forward 7 days
+        vm.warp(block.timestamp + 7 days + 1);
+        
+        uint256 employerBalanceBefore = employer.balance;
+        
+        // Resolve dispute
+        vm.prank(employer);
+        escrow.resolveDisputedJob(jobId);
+        
+        // Check refund
+        assertEq(employer.balance, employerBalanceBefore + PAYMENT);
+        
+        // Check status
+        AgentEscrow.Job memory job = escrow.getJob(jobId);
+        assertEq(uint(job.status), uint(AgentEscrow.JobStatus.Cancelled));
+    }
+
+    function testCannotResolveDisputeBeforeTimeout() public {
+        uint256 deadline = block.timestamp + 1 days;
+        
+        vm.prank(employer);
+        uint256 jobId = escrow.createJob{value: PAYMENT}(worker, deadline);
+        
+        vm.prank(employer);
+        escrow.dispute(jobId);
+        
+        // Try to resolve before timeout
+        vm.prank(employer);
+        vm.expectRevert("Dispute period not ended");
+        escrow.resolveDisputedJob(jobId);
+    }
+
+    function testOnlyEmployerCanResolveDispute() public {
+        uint256 deadline = block.timestamp + 1 days;
+        
+        vm.prank(employer);
+        uint256 jobId = escrow.createJob{value: PAYMENT}(worker, deadline);
+        
+        vm.prank(employer);
+        escrow.dispute(jobId);
+        
+        vm.warp(block.timestamp + 7 days + 1);
+        
+        // Worker tries to resolve
+        vm.prank(worker);
+        vm.expectRevert("Only employer can resolve");
+        escrow.resolveDisputedJob(jobId);
     }
 
     function testMultipleJobs() public {
