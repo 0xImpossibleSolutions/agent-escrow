@@ -414,7 +414,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         });
 
         // Check if job exists (employer will be 0x0 if not)
-        if (!job || !job[0] || job[0] === '0x0000000000000000000000000000000000000000') {
+        // viem returns named properties, not array indices
+        const zeroAddress = '0x0000000000000000000000000000000000000000';
+        if (!job || !job.employer || job.employer.toLowerCase() === zeroAddress) {
           return {
             content: [{
               type: "text",
@@ -432,13 +434,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             type: "text",
             text: JSON.stringify({
               job_id: args.job_id,
-              employer: job[0],
-              worker: job[1],
-              amount: formatEther(job[2]) + ' ETH',
-              deadline: new Date(Number(job[3]) * 1000).toISOString(),
-              status: STATUS_NAMES[job[4]] || 'Unknown',
-              deliverable: job[5] || '(none)',
-              created_at: new Date(Number(job[6]) * 1000).toISOString()
+              employer: job.employer,
+              worker: job.worker,
+              amount: formatEther(job.amount) + ' ETH',
+              deadline: new Date(Number(job.deadline) * 1000).toISOString(),
+              status: STATUS_NAMES[job.status] || 'Unknown',
+              deliverable: job.deliverable || '(none)',
+              created_at: new Date(Number(job.createdAt) * 1000).toISOString()
             }, null, 2)
           }]
         };
