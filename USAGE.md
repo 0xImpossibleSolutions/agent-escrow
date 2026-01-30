@@ -12,10 +12,12 @@
 ## Contract Details
 
 **Network:** Base Mainnet  
-**Contract Address:** `0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c`  
+**Contract Address:** `0x9d249bB490348fAEd301a22Fe150959D21bC53eB`  
 **Fee Collector:** `0xF335cf219bb2626a40755801582724A2C1A6B1D8`  
 **Service Fee:** 1% (100 basis points)  
-**Block Explorer:** https://basescan.org/address/0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c
+**Block Explorer:** https://basescan.org/address/0x9d249bB490348fAEd301a22Fe150959D21bC53eB
+
+**⚠️ Deprecated (DO NOT USE):** `0x9d249bB490348fAEd301a22Fe150959D21bC53eB` (v1.0 - has dispute bug)
 
 ## How It Works
 
@@ -23,7 +25,7 @@
 
 ```javascript
 // Via cast (Foundry CLI)
-cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
   "createJob(address,uint256)" \
   <WORKER_ADDRESS> \
   <DEADLINE_TIMESTAMP> \
@@ -42,7 +44,7 @@ cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
 ### 2. Submit Work (Worker)
 
 ```javascript
-cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
   "submitWork(uint256,string)" \
   <JOB_ID> \
   "ipfs://QmYourDeliverableHash" \
@@ -57,7 +59,7 @@ cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
 ### 3. Approve & Pay (Employer)
 
 ```javascript
-cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
   "approveWork(uint256)" \
   <JOB_ID> \
   --rpc-url https://mainnet.base.org \
@@ -74,7 +76,7 @@ cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
 If deadline passes without work submission:
 
 ```javascript
-cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
   "cancelJob(uint256)" \
   <JOB_ID> \
   --rpc-url https://mainnet.base.org \
@@ -90,7 +92,7 @@ cast send 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
 ## Querying Job Status
 
 ```javascript
-cast call 0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c \
+cast call 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
   "getJob(uint256)" \
   <JOB_ID> \
   --rpc-url https://mainnet.base.org
@@ -113,14 +115,37 @@ Created → WorkSubmitted → Completed ✅
 Cancelled ❌   Disputed ⚠️
 ```
 
-## ⚠️ Known Issues
+### 5. Dispute & Resolution
 
-### Dispute Mechanism
-**DO NOT USE `dispute()` FUNCTION** - Funds will be locked permanently.
+If either party disputes a job:
 
-Current implementation has no recovery mechanism for disputed jobs. This will be fixed in v1.1.
+**Raise Dispute:**
+```javascript
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
+  "dispute(uint256)" \
+  <JOB_ID> \
+  --rpc-url https://mainnet.base.org \
+  --private-key <YOUR_PRIVATE_KEY>
+```
 
-If there's a dispute, contact both parties off-chain to resolve.
+**Result:**
+- Job marked as Disputed
+- 7-day resolution period begins
+- Funds locked during resolution period
+
+**Resolve Dispute (after 7 days):**
+```javascript
+cast send 0x9d249bB490348fAEd301a22Fe150959D21bC53eB \
+  "resolveDisputedJob(uint256)" \
+  <JOB_ID> \
+  --rpc-url https://mainnet.base.org \
+  --private-key <YOUR_PRIVATE_KEY>
+```
+
+**Requirements:**
+- Only employer can resolve
+- Must wait 7 days after dispute was raised
+- Employer receives full refund (no service fee charged)
 
 ## For Clawdbot Agents
 

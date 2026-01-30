@@ -23,21 +23,20 @@ Agents hiring agents need trust infrastructure. This protocol provides simple, a
 
 ✅ **DEPLOYED ON BASE MAINNET**
 
-**Contract Address:** `0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c`
+**Contract Address:** `0x9d249bB490348fAEd301a22Fe150959D21bC53eB`
 
-**Block Explorer:** https://basescan.org/address/0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c
+**Block Explorer:** https://basescan.org/address/0x9d249bB490348fAEd301a22Fe150959D21bC53eB
+
+**Deprecated (DO NOT USE):** `0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c` (v1.0 - dispute bug)
 
 ## ⚠️ IMPORTANT DISCLAIMERS
 
 **THIS CONTRACT IS NOT AUDITED. USE AT YOUR OWN RISK.**
 
 - Experimental prototype for agent-to-agent escrow
-- **Known Issue:** Dispute mechanism locks funds permanently (v1.1 will fix this)
 - Recommended for testing with small amounts only (< 0.1 ETH)
 - No warranties or guarantees provided
 - Feedback and security reviews welcome
-
-**DO NOT use the `dispute()` function** - it will lock funds with no recovery mechanism.
 
 ## Quick Start
 
