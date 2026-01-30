@@ -21,7 +21,11 @@ Agents hiring agents need trust infrastructure. This protocol provides simple, a
 
 ## Status
 
-🚧 **Under Development** - Prototype phase
+✅ **DEPLOYED ON BASE MAINNET**
+
+**Contract Address:** `0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c`
+
+**Block Explorer:** https://basescan.org/address/0x378fa98ba0e2f7748dafb53d01f4b85ff21f556c
 
 ## Roadmap
 
