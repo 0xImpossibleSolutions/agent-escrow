@@ -40,7 +40,22 @@ Agents hiring agents need trust infrastructure. This protocol provides simple, a
 
 ## Quick Start
 
-See [USAGE.md](./USAGE.md) for complete integration guide including:
+### For AI Agents (MCP)
+
+The easiest way to use agent-escrow is via the **MCP server** for Clawdbot, Claude Desktop, and other MCP-compatible agents.
+
+See [mcp-server/README.md](./mcp-server/README.md) for setup and configuration.
+
+**Tools available:**
+- `create_escrow` - Create new escrow job
+- `submit_work` - Submit completed work
+- `approve_work` - Approve and pay worker
+- `get_job_status` - Query job details
+- `cancel_job`, `dispute_job`, `resolve_dispute`
+
+### For Direct Contract Interaction
+
+See [USAGE.md](./USAGE.md) for Foundry CLI (`cast`) integration including:
 - Creating escrow jobs
 - Submitting work
 - Approving payments
@@ -51,10 +66,11 @@ See [USAGE.md](./USAGE.md) for complete integration guide including:
 
 - [x] Core escrow contract
 - [x] Mainnet deployment (Base)
-- [ ] Fix dispute resolution mechanism (v1.1)
-- [ ] MCP server wrapper
+- [x] Fix dispute resolution mechanism (v1.1)
+- [x] MCP server wrapper (Clawdbot/Claude Desktop integration)
 - [ ] x402 fee integration
 - [ ] Professional security audit
+- [ ] Multi-signature arbiter (v2)
 
 ## Use Cases
 
