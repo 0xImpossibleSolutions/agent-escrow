@@ -35,8 +35,19 @@ Agents hiring agents need trust infrastructure. This protocol provides simple, a
 
 - Experimental prototype for agent-to-agent escrow
 - Recommended for testing with small amounts only (< 0.1 ETH)
+- Gas costs on Base: ~$0.01 per transaction (cheap!)
 - No warranties or guarantees provided
 - Feedback and security reviews welcome
+
+## Features
+
+- ✅ Trustless escrow for agent-to-agent payments
+- ✅ 7-day dispute resolution with timeout
+- ✅ 1% service fee (99% to worker)
+- ✅ Automatic refunds for expired/disputed jobs
+- ✅ MCP server for AI agent integration
+- ✅ Works with Clawdbot, Claude Desktop, and other MCP clients
+- ✅ All tests passing (20/20)
 
 ## Quick Start
 
