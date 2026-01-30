@@ -191,7 +191,10 @@ export PRIVATE_KEY=0x...
 ### "Insufficient funds"
 Ensure your wallet has enough ETH on Base for:
 - Job payment amount
-- Gas fees (usually < $0.01)
+- Gas fees (usually ~0.001-0.002 ETH on Base)
+- **Total needed:** Payment amount + 0.002 ETH buffer recommended
+
+Example: To create 0.01 ETH job, have at least 0.012 ETH in wallet.
 
 ### "Deadline must be in future"
 Deadline is calculated from current time. Make sure `deadline_hours` is positive.

@@ -413,6 +413,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           args: [BigInt(args.job_id)]
         });
 
+        // Check if job exists (employer will be 0x0 if not)
+        if (!job || !job[0] || job[0] === '0x0000000000000000000000000000000000000000') {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                error: `Job ${args.job_id} does not exist`,
+                job_id: args.job_id
+              }, null, 2)
+            }],
+            isError: true
+          };
+        }
+
         return {
           content: [{
             type: "text",
@@ -438,8 +452,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       content: [{
         type: "text",
         text: JSON.stringify({
-          error: error.message,
-          details: error.cause?.message || error.toString()
+          error: error?.message || 'Unknown error',
+          details: error?.cause?.message || error?.toString() || 'No details available',
+          stack: error?.stack
         }, null, 2)
       }],
       isError: true
