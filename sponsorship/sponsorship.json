@@ -1,0 +1,12 @@
+{
+  "config": {
+    "totalBudget": 20.0,
+    "totalSpent": 0.0,
+    "maxJobsPerAgentPerDay": 5,
+    "estimatedGasPerJob": 0.03,
+    "status": "active"
+  },
+  "agents": {},
+  "pending": {},
+  "usage": []
+}
